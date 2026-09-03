@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Fancy Pants</title>
+  <desc id="desc">Miniatura local de Fancy Pants</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f1c40f"/>
+      <stop offset="100%" stop-color="#09090f"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="80%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <rect width="640" height="360" fill="url(#glow)"/>
+  <circle cx="540" cy="70" r="108" fill="#ffffff" opacity=".08"/>
+  <circle cx="580" cy="310" r="150" fill="#000000" opacity=".16"/>
+  <path d="M0 292 C150 240 230 340 390 278 S550 260 640 220 V360 H0Z" fill="#000000" opacity=".24"/>
+  <text x="46" y="110" font-family="Arial, sans-serif" font-size="72" dominant-baseline="middle">🏃</text>
+  <text x="46" y="224" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">Fancy Pants</text>
+  <text x="48" y="266" fill="#ffffff" fill-opacity=".72" font-family="Arial, sans-serif" font-size="14" letter-spacing="3">PIXEL JOGOS</text>
+</svg>
