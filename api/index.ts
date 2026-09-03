@@ -22,3 +22,5 @@ app.use(
 );
 
 export default app;
+
+export { app };
