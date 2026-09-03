@@ -1,4 +1,10 @@
-import { COOKIE_NAME, GOOGLE_SITES_RETURN_URL, ONE_YEAR_MS, OAUTH_STATE_COOKIE, decodeOAuthState } from "@shared/const";
+import {
+  COOKIE_NAME,
+  GOOGLE_SITES_RETURN_URL,
+  ONE_YEAR_MS,
+  OAUTH_STATE_COOKIE,
+  decodeOAuthState,
+} from "../../shared/const.js";
 import { parse as parseCookieHeader } from "cookie";
 import type { Express, Request, Response } from "express";
 import * as db from "../db.js";
@@ -39,16 +45,18 @@ export function registerOAuthRoutes(app: Express) {
       return;
     }
 
-    // CSRF guard: the nonce in `state` must match the one-time cookie that
-    // startLogin set in the browser that began this login. An attacker can
-    // forge `state`, but cannot plant this cookie in the victim's browser.
     const { nonce, returnTo } = decodeOAuthState(state);
     const expectedNonce = parseCookieHeader(req.headers.cookie ?? "")[OAUTH_STATE_COOKIE];
     if (!nonce || nonce !== expectedNonce) {
       res.status(403).json({ error: "invalid oauth state" });
       return;
     }
-    res.clearCookie(OAUTH_STATE_COOKIE, { path: "/", secure: true, sameSite: "none" });
+
+    res.clearCookie(OAUTH_STATE_COOKIE, {
+      path: "/",
+      secure: true,
+      sameSite: "none",
+    });
 
     try {
       const tokenResponse = await sdk.exchangeCodeForToken(code, state);
@@ -59,8 +67,16 @@ export function registerOAuthRoutes(app: Express) {
         return;
       }
 
-      const identityWithPhoto = userInfo as typeof userInfo & { avatarUrl?: string; picture?: string; avatar?: string };
-      const avatarUrl = identityWithPhoto.avatarUrl || identityWithPhoto.picture || identityWithPhoto.avatar;
+      const identityWithPhoto = userInfo as typeof userInfo & {
+        avatarUrl?: string;
+        picture?: string;
+        avatar?: string;
+      };
+      const avatarUrl =
+        identityWithPhoto.avatarUrl ||
+        identityWithPhoto.picture ||
+        identityWithPhoto.avatar;
+
       await db.upsertUser({
         openId: userInfo.openId,
         name: userInfo.name || null,
@@ -76,14 +92,22 @@ export function registerOAuthRoutes(app: Express) {
       });
 
       const cookieOptions = getSessionCookieOptions(req);
-      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+      res.cookie(COOKIE_NAME, sessionToken, {
+        ...cookieOptions,
+        maxAge: ONE_YEAR_MS,
+      });
 
       if (returnTo === GOOGLE_SITES_RETURN_URL) {
-        const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0]?.trim() || req.protocol;
-        const relayUrl = new URL("/?login=1&returnTo=google-sites", `${forwardedProto}://${req.get("host")}`);
+        const forwardedProto =
+          req.get("x-forwarded-proto")?.split(",")[0]?.trim() || req.protocol;
+        const relayUrl = new URL(
+          "/?login=1&returnTo=google-sites",
+          `${forwardedProto}://${req.get("host")}`,
+        );
         res.redirect(302, relayUrl.toString());
         return;
       }
+
       res.redirect(302, "/");
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
