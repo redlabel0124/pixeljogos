@@ -1,10 +1,17 @@
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
-import { systemRouter } from "./_core/systemRouter";
-import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { sdk } from "./_core/sdk";
-import { activateUserPlan, addDailyUsage, createEmailUser, getUserByEmail, getUserByOpenId, updateUserProfile } from "./db";
-import { hashPassword, verifyPassword } from "./_core/password";
+import { getSessionCookieOptions } from "./_core/cookies.js";
+import { systemRouter } from "./_core/systemRouter.js";
+import { protectedProcedure, publicProcedure, router } from "./_core/trpc.js";
+import { sdk } from "./_core/sdk.js";
+import {
+  activateUserPlan,
+  addDailyUsage,
+  createEmailUser,
+  getUserByEmail,
+  getUserByOpenId,
+  updateUserProfile,
+} from "./db.js";
+import { hashPassword, verifyPassword } from "./_core/password.js";
 import { z } from "zod";
 
 function normalizeEmail(email: string) {
