@@ -10,7 +10,7 @@ import { Gamepad2, LockKeyhole, LogIn, LogOut, ShoppingCart, Sparkles, Timer, Ch
 import { toast } from "sonner";
 import { advanceFreeTimer, recoverTimerAfterPersistenceError } from "@shared/planRules";
 import { BASE_FLASH, originalGames } from "@/data/originalGames";
-import { relaySessionToEmbeddedFrame, startLogin } from "@/const";
+import { storeEmbeddedSessionToken } from "@/const";
 
 const plans = [
   { id: "free" as const, name: "Gratuito", price: "R$ 0", detail: "1 hora por dia", accent: "from-fuchsia-500 to-violet-500" },
@@ -117,12 +117,8 @@ export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: async user => {
-      if (isGoogleSitesLogin) {
-        const sent = await relaySessionToEmbeddedFrame();
-        if (sent) {
-          window.close();
-          return;
-        }
+      if (typeof window !== "undefined" && window.top !== window.self && user.sessionToken) {
+        storeEmbeddedSessionToken(user.sessionToken);
       }
       utils.auth.me.setData(undefined, user);
       await utils.auth.me.invalidate();
@@ -134,12 +130,8 @@ export default function Home() {
   });
   const registerMutation = trpc.auth.register.useMutation({
     onSuccess: async user => {
-      if (isGoogleSitesLogin) {
-        const sent = await relaySessionToEmbeddedFrame();
-        if (sent) {
-          window.close();
-          return;
-        }
+      if (typeof window !== "undefined" && window.top !== window.self && user.sessionToken) {
+        storeEmbeddedSessionToken(user.sessionToken);
       }
       utils.auth.me.setData(undefined, user);
       await utils.auth.me.invalidate();
@@ -150,10 +142,6 @@ export default function Home() {
     onError: error => toast.error(error.message || "Não foi possível criar a conta."),
   });
   const openAuth = (mode: "login" | "register" = "login") => {
-    if (typeof window !== "undefined" && window.top !== window.self) {
-      void startLogin();
-      return;
-    }
     setAuthMode(mode);
     setAuthOpen(true);
   };
