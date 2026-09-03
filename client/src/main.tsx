@@ -5,7 +5,6 @@ import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
-import { COOKIE_NAME, listenForEmbeddedSession, relaySessionToEmbeddedFrame, storeEmbeddedSessionToken } from "./const";
 import "./index.css";
 
 const queryClient = new QueryClient();
@@ -34,20 +33,6 @@ queryClient.getMutationCache().subscribe(event => {
   }
 });
 
-if (typeof window !== "undefined") {
-  listenForEmbeddedSession(token => {
-    storeEmbeddedSessionToken(token);
-    window.location.reload();
-  });
-
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("login") === "1" && params.get("returnTo") === "google-sites") {
-    void relaySessionToEmbeddedFrame().then((sent: boolean) => {
-      if (sent) window.close();
-    });
-  }
-}
-
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
@@ -57,19 +42,8 @@ const trpcClient = trpc.createClient({
         return {};
       },
       fetch(input, init) {
-        const headers = new Headers(init?.headers);
-        try {
-          const storedCookie = sessionStorage.getItem("manus-cookie");
-          const prefix = `${COOKIE_NAME}=`;
-          if (storedCookie?.startsWith(prefix)) {
-            headers.set("Authorization", `Bearer ${storedCookie.slice(prefix.length)}`);
-          }
-        } catch {
-          // Restricted iframe contexts may not expose sessionStorage.
-        }
         return globalThis.fetch(input, {
           ...(init ?? {}),
-          headers,
           credentials: "include",
         });
       },
