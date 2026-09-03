@@ -10,6 +10,7 @@ import { Gamepad2, LockKeyhole, LogIn, LogOut, ShoppingCart, Sparkles, Timer, Ch
 import { toast } from "sonner";
 import { advanceFreeTimer, recoverTimerAfterPersistenceError } from "@shared/planRules";
 import { BASE_FLASH, originalGames } from "@/data/originalGames";
+import { relaySessionToEmbeddedFrame, startLogin } from "@/const";
 
 const plans = [
   { id: "free" as const, name: "Gratuito", price: "R$ 0", detail: "1 hora por dia", accent: "from-fuchsia-500 to-violet-500" },
@@ -102,6 +103,7 @@ export default function Home() {
   const playerShellRef = useRef<HTMLDivElement>(null);
   const secondsRef = useRef(0);
   const profile = profileQuery.data;
+  const isGoogleSitesLogin = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("login") === "1" && new URLSearchParams(window.location.search).get("returnTo") === "google-sites";
   const userWithPhoto = user as (typeof user & { avatarUrl?: string; picture?: string; avatar?: string }) | null;
   const profilePhoto = profile?.avatarUrl || userWithPhoto?.avatarUrl || userWithPhoto?.picture || userWithPhoto?.avatar;
   const usableProfilePhoto = profilePhoto && !profilePhotoBroken ? profilePhoto : null;
@@ -115,6 +117,13 @@ export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: async user => {
+      if (isGoogleSitesLogin) {
+        const sent = await relaySessionToEmbeddedFrame();
+        if (sent) {
+          window.close();
+          return;
+        }
+      }
       utils.auth.me.setData(undefined, user);
       await utils.auth.me.invalidate();
       setAuthOpen(false);
@@ -125,6 +134,13 @@ export default function Home() {
   });
   const registerMutation = trpc.auth.register.useMutation({
     onSuccess: async user => {
+      if (isGoogleSitesLogin) {
+        const sent = await relaySessionToEmbeddedFrame();
+        if (sent) {
+          window.close();
+          return;
+        }
+      }
       utils.auth.me.setData(undefined, user);
       await utils.auth.me.invalidate();
       setAuthOpen(false);
@@ -134,9 +150,19 @@ export default function Home() {
     onError: error => toast.error(error.message || "Não foi possível criar a conta."),
   });
   const openAuth = (mode: "login" | "register" = "login") => {
+    if (typeof window !== "undefined" && window.top !== window.self) {
+      void startLogin();
+      return;
+    }
     setAuthMode(mode);
     setAuthOpen(true);
   };
+  useEffect(() => {
+    if (!isGoogleSitesLogin) return;
+    setAuthMode("login");
+    setAuthOpen(true);
+  }, [isGoogleSitesLogin]);
+
   const submitAuth = (event: React.FormEvent) => {
     event.preventDefault();
     if (authMode === "login") {
