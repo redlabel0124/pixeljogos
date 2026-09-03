@@ -10,7 +10,6 @@ import { Gamepad2, LockKeyhole, LogIn, LogOut, ShoppingCart, Sparkles, Timer, Ch
 import { toast } from "sonner";
 import { advanceFreeTimer, recoverTimerAfterPersistenceError } from "@shared/planRules";
 import { BASE_FLASH, originalGames } from "@/data/originalGames";
-import { relaySessionToEmbeddedFrame, startLogin } from "@/const";
 
 const plans = [
   { id: "free" as const, name: "Gratuito", price: "R$ 0", detail: "1 hora por dia", accent: "from-fuchsia-500 to-violet-500" },
@@ -103,7 +102,6 @@ export default function Home() {
   const playerShellRef = useRef<HTMLDivElement>(null);
   const secondsRef = useRef(0);
   const profile = profileQuery.data;
-  const isGoogleSitesLogin = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("login") === "1" && new URLSearchParams(window.location.search).get("returnTo") === "google-sites";
   const userWithPhoto = user as (typeof user & { avatarUrl?: string; picture?: string; avatar?: string }) | null;
   const profilePhoto = profile?.avatarUrl || userWithPhoto?.avatarUrl || userWithPhoto?.picture || userWithPhoto?.avatar;
   const usableProfilePhoto = profilePhoto && !profilePhotoBroken ? profilePhoto : null;
@@ -117,13 +115,6 @@ export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: async user => {
-      if (isGoogleSitesLogin) {
-        const sent = await relaySessionToEmbeddedFrame();
-        if (sent) {
-          window.close();
-          return;
-        }
-      }
       utils.auth.me.setData(undefined, user);
       await utils.auth.me.invalidate();
       setAuthOpen(false);
@@ -134,13 +125,6 @@ export default function Home() {
   });
   const registerMutation = trpc.auth.register.useMutation({
     onSuccess: async user => {
-      if (isGoogleSitesLogin) {
-        const sent = await relaySessionToEmbeddedFrame();
-        if (sent) {
-          window.close();
-          return;
-        }
-      }
       utils.auth.me.setData(undefined, user);
       await utils.auth.me.invalidate();
       setAuthOpen(false);
@@ -150,19 +134,9 @@ export default function Home() {
     onError: error => toast.error(error.message || "Não foi possível criar a conta."),
   });
   const openAuth = (mode: "login" | "register" = "login") => {
-    if (typeof window !== "undefined" && window.top !== window.self) {
-      void startLogin();
-      return;
-    }
     setAuthMode(mode);
     setAuthOpen(true);
   };
-  useEffect(() => {
-    if (!isGoogleSitesLogin) return;
-    setAuthMode("login");
-    setAuthOpen(true);
-  }, [isGoogleSitesLogin]);
-
   const submitAuth = (event: React.FormEvent) => {
     event.preventDefault();
     if (authMode === "login") {
@@ -337,4 +311,3 @@ export default function Home() {
 {profileOpen && isAuthenticated && <Dialog open={profileOpen} onOpenChange={open => { setProfileOpen(open); if (!open) setProfileEditing(false); }}><DialogContent className="border-white/10 bg-[#11101a] text-white"><DialogHeader><DialogTitle className="flex items-center gap-3">{usableProfilePhoto ? <img src={usableProfilePhoto} alt="Foto de perfil" onError={() => setProfilePhotoBroken(true)} className="h-12 w-12 rounded-full object-cover ring-2 ring-fuchsia-400/40" /> : <span className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-pink-500 to-violet-600 text-sm font-bold">{profileInitials}</span>}<span className="flex items-center gap-2"><UserRound className="h-5 w-5 text-fuchsia-400" />Meu perfil</span></DialogTitle><DialogDescription className="text-slate-400">Informações da sua conta Pixel Jogos.</DialogDescription></DialogHeader>{profileEditing ? <div className="space-y-4"><div><label htmlFor="profile-name" className="text-xs uppercase tracking-wider text-slate-500">Nome</label><Input id="profile-name" value={editName} onChange={event => setEditName(event.target.value)} maxLength={80} className="mt-2 border-white/10 bg-black/20 text-white" placeholder="Seu nome" /></div><div><p className="text-xs uppercase tracking-wider text-slate-500">E-mail</p><p className="mt-2 break-words rounded-xl border border-white/10 bg-black/20 p-3 font-medium text-white">{user?.email || "Não informado"}</p></div><div><label htmlFor="profile-avatar" className="text-xs uppercase tracking-wider text-slate-500">Imagem de perfil</label><Input id="profile-avatar" type="url" value={editAvatarUrl} onChange={event => { setEditAvatarUrl(event.target.value); setProfilePhotoBroken(false); }} className="mt-2 border-white/10 bg-black/20 text-white" placeholder="Cole o link da imagem" /><p className="mt-1 text-xs text-slate-500">Use um link público de imagem (JPG, PNG ou WEBP).</p></div><div className="rounded-xl border border-fuchsia-400/20 bg-fuchsia-500/10 p-4"><p className="text-xs uppercase tracking-wider text-fuchsia-200">Plano atual</p><p className="mt-1 font-semibold text-white">{currentPlanName}</p></div><div className="flex flex-col gap-3 pt-2 sm:flex-row"><Button className="flex-1 bg-gradient-to-r from-pink-500 to-violet-600" disabled={updateProfile.isPending || !editName.trim()} onClick={() => updateProfile.mutate({ name: editName.trim(), avatarUrl: editAvatarUrl.trim() || null })}>Salvar alterações</Button><Button variant="outline" className="flex-1 border-red-400/30 bg-transparent text-red-200 hover:bg-red-500/10 hover:text-red-100" onClick={async () => { await logout(); setProfileOpen(false); }}><LogOut className="mr-2 h-4 w-4" />Sair da conta</Button></div></div> : <div className="space-y-4"><div className="rounded-2xl border border-white/10 bg-gradient-to-br from-fuchsia-500/15 via-violet-500/10 to-transparent p-5 text-center"><div className="mx-auto mb-3 grid h-20 w-20 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-pink-500 to-violet-600 text-xl font-bold shadow-lg shadow-fuchsia-950/40">{usableProfilePhoto ? <img src={usableProfilePhoto} alt="Foto de perfil" onError={() => setProfilePhotoBroken(true)} className="h-full w-full object-cover" /> : profileInitials}</div><h3 className="text-xl font-semibold">{profile?.name || user?.name || "Usuário Pixel"}</h3><p className="mt-1 break-words text-sm text-slate-400">{user?.email || "E-mail não informado"}</p></div><div className="grid gap-3 sm:grid-cols-2"><div className="rounded-xl border border-white/10 bg-black/20 p-4"><p className="text-xs uppercase tracking-wider text-slate-500">Plano atual</p><p className="mt-1 font-semibold text-white">{currentPlanName}</p></div><div className="rounded-xl border border-white/10 bg-black/20 p-4"><p className="text-xs uppercase tracking-wider text-slate-500">Acesso</p><p className="mt-1 font-semibold text-fuchsia-200">{activePlan === "none" ? "Escolha um plano" : "Ativo"}</p></div></div><div className="flex flex-col gap-3 sm:flex-row"><Button className="flex-1 bg-gradient-to-r from-pink-500 to-violet-600" onClick={() => setProfileEditing(true)}><UserRound className="mr-2 h-4 w-4" />Alterar perfil</Button>{user?.role === "admin" && <Button variant="outline" className="flex-1 border-fuchsia-400/30 bg-transparent text-fuchsia-200 hover:bg-fuchsia-500/10 hover:text-white" onClick={() => { setProfileOpen(false); window.location.href = "/admin"; }}><ShieldCheck className="mr-2 h-4 w-4" />Painel admin</Button>}</div><Button variant="outline" className="w-full border-red-400/30 bg-transparent text-red-200 hover:bg-red-500/10 hover:text-red-100" onClick={async () => { await logout(); setProfileOpen(false); }}><LogOut className="mr-2 h-4 w-4" />Sair da conta</Button></div>}</DialogContent></Dialog>}
   {selectedGame && <div className="fixed inset-0 z-50 grid place-items-center bg-black/80 p-4" role="dialog" aria-modal="true" aria-label={`Player de ${selectedGame.title}`}><div ref={playerShellRef} className={`${isFullscreen ? "fixed inset-0 z-[60] h-screen w-screen max-w-none rounded-none border-0" : "flex h-[min(760px,92vh)] w-full max-w-5xl rounded-2xl border border-fuchsia-400/30"} flex flex-col overflow-hidden bg-[#0e0b17] shadow-2xl shadow-fuchsia-950/50`}><div className="flex items-center justify-between border-b border-white/10 px-5 py-4"><div><h2 className="font-semibold text-white">{selectedGame.title}</h2><p className="text-xs text-slate-500">{selectedGame.label} · catálogo original Pixel Jogos</p></div><div className="flex items-center gap-2"><Button variant="outline" size="sm" className="border-white/10 bg-transparent text-slate-300 hover:bg-fuchsia-500/20 hover:text-white" onClick={toggleFullscreen} aria-label={isFullscreen ? "Sair da tela cheia" : "Abrir tela cheia"} title={isFullscreen ? "Sair da tela cheia" : "Tela cheia"}>{isFullscreen ? <Minimize2 className="h-4 w-4 sm:mr-1.5" /> : <Maximize2 className="h-4 w-4 sm:mr-1.5" />}<span className="hidden sm:inline">{isFullscreen ? "Sair da tela cheia" : "Tela cheia"}</span></Button><Button variant="ghost" className="text-slate-400 hover:text-white" onClick={async () => { if (document.fullscreenElement) await document.exitFullscreen(); setIsFullscreen(false); setIsNativeFullscreen(false); setSelectedGame(null); }}>Fechar</Button></div></div><div className="min-h-0 flex-1 bg-black p-3">{selectedGame.type === "html5" ? <iframe title={selectedGame.title} src={selectedGame.source} className="h-full w-full rounded-xl border border-white/10" allow="fullscreen; autoplay; gamepad" allowFullScreen /> : <div ref={gameContainerRef} className="h-full w-full overflow-hidden rounded-xl border border-white/10 bg-slate-950" />}</div></div></div>}
 <footer className="mt-16 border-t border-white/10 py-8 text-center"><p className="text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-300">DESENVOLVIDO POR JULIANO MASCARENHAS</p><p className="mt-2 text-xs text-slate-600">Pixel Jogos · experiência independente</p></footer></div></main>;
-}
