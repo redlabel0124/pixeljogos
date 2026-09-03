@@ -1,0 +1,182 @@
+# Project TODO
+
+- [x] Implementar autenticação real via OAuth com sessão persistente no servidor
+- [x] Criar modelo persistente de assinatura/plano vinculado ao usuário autenticado
+- [x] Criar tela inicial bloqueada para usuários não autenticados
+- [x] Criar tela profissional de planos Gratuito, Mensal e Anual em tema escuro rosa/roxo
+- [x] Implementar seleção de plano e carrinho em fluxo interno
+- [x] Implementar pagamento demonstrativo com Pix, Cartão e Boleto
+- [x] Implementar confirmação efetiva do plano escolhido antes de liberar o catálogo
+- [x] Criar catálogo de jogos Flash e HTML5 protegido por autenticação e plano ativo
+- [x] Implementar desbloqueio automático do catálogo após confirmação
+- [x] Implementar temporizador diário de 1 hora para o plano Gratuito
+- [x] Implementar bloqueio automático quando o limite diário for atingido
+- [x] Preservar responsividade, acessibilidade e identidade visual sofisticada
+- [x] Escrever e atualizar testes Vitest para autenticação, assinatura e regras de acesso
+- [x] Executar validação de tipos, testes e verificação visual responsiva
+- [x] Documentar configuração do OAuth e incorporação no Google Sites
+- [x] Liberar o catálogo automaticamente ao confirmar o pagamento demonstrativo e exibir erro de ativação
+- [x] Corrigir o temporizador gratuito para parar no limite e tratar falhas de persistência
+- [x] Substituir cards estáticos por jogos com links/players funcionais e handlers acessíveis
+- [x] Adicionar testes Vitest dos procedimentos de conta e uso
+- [x] Validar a interface também em viewport mobile e revisar foco/navegação por teclado
+- [x] Adicionar tratamento robusto de erro ao registro de uso, com feedback e parada segura do temporizador
+- [x] Criar testes Vitest para os procedimentos account.profile, account.activatePlan e account.addUsage
+- [x] Registrar e ajustar explicitamente foco e navegação por teclado e revalidar mobile
+- [x] Corrigir o temporizador gratuito para usar uma única fonte de verdade e evitar contagem dupla entre estado local e backend
+- [x] Adicionar testes Vitest de sucesso para ativação de plano e atualização de uso diário
+- [x] Implementar e registrar focus rings, ordem de tabulação e ativação por teclado e revalidar mobile
+- [x] Corrigir o temporizador para bloquear exatamente ao atingir 3600 segundos e sincronizar o contador local com o perfil persistido
+- [x] Implementar focus rings visíveis nos controles principais e registrar a navegação por teclado no estilo global
+- [x] Sincronizar secondsRef e seconds com dailyUsageSeconds persistido, inclusive após erro de addUsage
+- [x] Adicionar teste de fronteira do temporizador em 3600s e ressincronização após falha
+- [x] Adicionar teste Vitest cobrindo a ressincronização do contador local após falha de addUsage e refetch do perfil
+- [x] Adicionar teste de integração do fluxo de erro do temporizador, comprovando reset local e refetch após falha de persistência
+- [x] Adicionar teste de componente para Home cobrindo erro de addUsage, reset do contador e refetch do perfil
+- [x] Adicionar no rodapé da plataforma a assinatura “DESENVOLVIDO POR JULIANO MASCARENHAS”
+- [x] Recuperar os jogos Flash e HTML5 do código original fornecido pelo usuário
+- [x] Integrar o catálogo original ao fluxo protegido por autenticação e plano
+- [x] Remover links externos de exemplo e validar o player dos jogos originais
+- [x] Exibir o catálogo original como primeira tela, sem exigir login para visualizar
+- [x] Solicitar login somente ao clicar em Jogar agora
+- [x] Encaminhar usuário autenticado sem plano para a tela de planos
+- [x] Abrir o jogo original somente após autenticação e plano ativo
+- [x] Validar o fluxo completo e publicar a nova versão
+- [x] Validar em navegador a abertura de pelo menos 1 jogo Flash via Ruffle e 1 jogo HTML5 no modal/iframe, corrigindo qualquer falha de carregamento
+- [x] Confirmar quais jogos originais ainda dependem de hospedagem externa e documentar essa dependência
+- [x] Salvar checkpoint e publicar a versão após o novo fluxo público do catálogo
+- [x] Validar no navegador a abertura real de 1 jogo HTML5 no modal/iframe e 1 jogo Flash via Ruffle após autenticação e plano ativo
+- [x] Salvar checkpoint e publicar a versão após concluir a validação manual dos players
+- [x] Salvar um novo checkpoint após as mudanças do catálogo público e do player interno
+- [x] Confirmar que a URL pública atualizada mostra o catálogo na primeira tela
+- [x] Revalidar na URL publicada a abertura de 1 jogo HTML5 e 1 jogo Flash após login e plano ativo
+- [x] Corrigir o endereço do Subway Surfers para abrir game.html em vez da página de documentação
+- [x] Validar o jogo HTML5 corrigido e publicar a atualização
+- [x] Validar no navegador que o Subway Surfers corrigido carrega o jogo real em game.html dentro do iframe
+- [x] Publicar novamente a versão corrigida e confirmar que a URL pública mostra o catálogo na primeira tela
+- [x] Revalidar na URL pública atualizada a abertura do Subway Surfers corrigido após login e plano ativo
+- [x] Verificar se subwaysurferspc.io permite incorporação em iframe
+- [x] Avaliar se existe uma URL direta/autorizada do jogo sem a interface do site
+- [x] Integrar somente se a origem permitir e validar dentro do fluxo protegido
+- [x] Usar https://subwaysurferspc.io/subway-surfers.embed como fonte do Subway Surfers, exibindo somente a área do jogo
+- [x] Validar a tela Unity/canvas do player embed e publicar a atualização
+- [x] Salvar um novo checkpoint após a troca do Subway Surfers para subwaysurferspc.io/subway-surfers.embed
+- [x] Publicar a versão corrigida e confirmar a URL pública atualizada
+- [x] Revalidar na URL pública o player embed e a tela Unity/canvas após Play Now
+- [x] Diagnosticar o erro 403 exibido no Google Sites com a conta escolar
+- [x] Verificar compatibilidade de compartilhamento do Google Sites e acesso da plataforma publicada
+- [x] Orientar o caminho de acesso que funcione para a conta do usuário sem expor credenciais
+- [x] Confirmar que o erro vem de um bloco Microsoft antigo na página Home do Google Sites
+- [x] Orientar a remoção do bloco Microsoft e a incorporação somente da URL Pixel Jogos
+- [x] Garantir que o botão de autenticação abra fora do iframe, em uma aba própria
+- [x] Validar o acesso ao Google Sites e o login da plataforma após a limpeza
+- [x] Confirmar no editor do Google Sites qual bloco/iframe está carregando login.microsoftonline.com
+- [x] Remover do Google Sites qualquer bloco antigo de login Microsoft e deixar apenas a URL Pixel Jogos
+- [x] Implementar ou documentar o fluxo de autenticação fora do iframe em uma nova aba
+- [x] Revalidar no Google Sites final a plataforma e o login após a limpeza
+- [x] Fazer o botão Entrar sair do iframe do Google Sites e iniciar o OAuth em nível superior
+- [x] Validar o login iniciado dentro do Google Sites em nova navegação da plataforma
+- [x] Abrir a rota de autenticação da plataforma em nova aba ao clicar Entrar dentro do Google Sites
+- [x] Validar o login fora do iframe e documentar a limpeza do bloco Microsoft no Google Sites
+- [x] Validar no Google Sites publicado que clicar em Entrar abre a plataforma em nova aba e chega ao OAuth
+- [x] Confirmar no editor do Google Sites que blocos antigos de login.microsoftonline.com foram removidos
+- [x] Registrar no README o procedimento exato de limpeza do bloco Microsoft e o comportamento esperado
+- [x] Validar que https://sites.google.com/view/playpixeljogos/home é o destino público correto
+- [x] Configurar retorno automático ao Google Sites após OAuth usando destino permitido
+- [x] Testar o retorno e publicar a versão atualizada
+- [x] Alterar o botão Entrar dentro do Google Sites para navegar na mesma aba
+- [x] Preservar o retorno automático ao Google Sites após o OAuth
+- [x] Validar a ausência de segunda aba e publicar a atualização
+- [x] Confirmar no código e no navegador que o login iniciado no iframe navega na mesma aba
+- [x] Preservar o retorno automático para https://sites.google.com/view/playpixeljogos/home
+- [x] Publicar a versão atualizada do fluxo sem segunda aba
+- [x] Corrigir bug relatado: botões da plataforma não respondem no Google Sites
+- [x] Validar Entrar, Jogar agora, Ver planos, seleção de plano, carrinho e confirmação
+- [x] Publicar a correção somente após testar os botões na prévia e no endereço público
+- [x] Restaurar o botão Entrar para abrir a autenticação em uma segunda aba, como no fluxo anterior
+- [x] Validar o retorno automático ao Google Sites após o login em segunda aba
+- [x] Executar testes e publicar a restauração do fluxo em duas abas
+- [x] Adicionar botão fixo de Perfil no cabeçalho com Nome e E-mail do usuário autenticado
+- [x] Adicionar botão fixo de Planos ao lado do Perfil para consultar e escolher planos
+- [x] Validar modais, acessibilidade e responsividade dos novos controles
+- [x] Executar testes e publicar a atualização de Perfil e Planos
+- [x] Exibir a foto de perfil da conta Google/Manus no botão e no modal de Perfil
+- [x] Corrigir os imports do Dialog e validar Perfil, Planos e foto responsivos
+- [x] Adicionar botão Voltar aos jogos nas telas de Planos, Carrinho, Pagamento e Confirmação
+- [x] Validar o retorno ao catálogo e publicar a atualização de navegação
+- [x] Remover o botão Ver planos de dentro do modal Perfil, mantendo o botão fixo Planos do cabeçalho
+- [x] Atualizar o teste do Perfil e publicar a alteração
+- [x] Salvar novo checkpoint e publicar explicitamente a remoção do botão Ver planos do modal Perfil após a validação final
+- [x] Remover o nome textual exibido no início do cabeçalho
+- [x] Adicionar edição persistente do nome no Perfil
+- [x] Adicionar edição da imagem de perfil no Perfil com fallback seguro
+- [x] Validar a interface e publicar as alterações do Perfil
+- [x] Mover o botão Sair da conta para dentro do modal Perfil
+- [x] Remover o nome textual do cabeçalho e concluir a edição de nome e imagem no Perfil
+- [x] Validar e publicar o Perfil atualizado
+- [x] Implementar fallback real da foto de perfil em caso de URL inválida ou erro de carregamento
+- [x] Validar manualmente ou por teste o fluxo de abrir, editar, salvar e sair do Perfil
+- [x] Revalidar o Perfil em viewport mobile e publicar o checkpoint final
+- [x] Adicionar teste cobrindo editar nome e imagem, salvar com sucesso e sair da conta
+- [x] Validar o modal Perfil em viewport mobile após as mudanças de edição
+- [x] Salvar novo checkpoint e publicar explicitamente a atualização final do Perfil
+- [x] Validar o modal Perfil aberto em viewport mobile, confirmando campos de nome/imagem, botão Salvar e botão Sair
+- [x] Salvar novo checkpoint e publicar explicitamente a atualização final do Perfil após a validação final
+- [x] Validar visualmente o modal Perfil aberto em viewport mobile, confirmando campos de nome/imagem, botão Salvar e botão Sair
+- [x] Salvar novo checkpoint e publicar explicitamente a atualização final do Perfil após a validação final mobile
+- [x] Criar modo de visualização bonito para o Perfil com foto, nome, e-mail e plano
+- [x] Adicionar botão Alterar perfil na parte inferior para abrir a edição existente
+- [x] Manter Salvar alterações e Sair da conta dentro do modo de edição
+- [x] Atualizar testes, validar responsividade e publicar o Perfil reorganizado
+- [x] Validar visualmente no navegador o Perfil reorganizado, incluindo Alterar perfil e layout em mobile
+- [x] Salvar novo checkpoint e publicar explicitamente a reorganização do Perfil após a validação final
+- [x] Validar visualmente no navegador o Perfil reorganizado em viewport mobile, abrindo o modal e conferindo Alterar perfil
+- [x] Após a validação visual mobile, salvar e publicar a versão final do Perfil reorganizado
+- [x] Criar miniaturas visuais correspondentes aos jogos do catálogo
+- [x] Hospedar os assets fora do projeto e mapear cada miniatura ao jogo correto
+- [x] Integrar miniaturas nos cards com fallback visual e carregamento eficiente
+- [x] Validar catálogo em desktop/mobile e publicar a atualização visual
+- [x] Substituir as artes genéricas por imagens correspondentes ao próprio jogo em cada card
+- [x] Corrigir especialmente Subway Surfers e Henry Stickmin com imagens próprias; demais títulos permanecem pendentes de artes específicas
+- [x] Validar o mapeamento individual, responsividade e publicar a correção
+- [x] Corrigir especialmente Subway Surfers e Henry Stickmin com imagens específicas dos próprios jogos
+- [x] Substituir as miniaturas genéricas restantes por imagens identificáveis de cada jogo
+- [x] Validar e publicar a correção completa das miniaturas específicas
+- [x] Remover os emojis sobrepostos das miniaturas dos jogos
+- [x] Validar que os cards exibem apenas imagens, tipo e nome sem perder acessibilidade
+- [x] Publicar a atualização visual após a validação final
+- [x] Salvar novo checkpoint e publicar explicitamente a remoção dos emojis e o layout final dos cards após a validação concluída
+- [x] Criar ou obter imagens temáticas específicas para todos os 41 jogos
+- [x] Substituir todas as artes genéricas restantes, mantendo uma miniatura única por jogo
+- [x] Confirmar visualmente os 41 cards sem emojis e publicar a versão final
+- [x] Definir a lista de novos jogos e confirmar fontes compatíveis
+- [x] Adicionar dados, categorias, miniaturas e players dos novos jogos
+- [x] Preservar login, planos, temporizador e bloqueio no catálogo expandido
+- [x] Validar navegação, players e responsividade e publicar a expansão
+- [x] Pesquisar fontes compatíveis para Fireboy and Watergirl, Vex, Swords and Sandals, Raft Wars e Red Ball
+- [x] Pesquisar fontes compatíveis para Action Turnip, Strike Force Heroes, The Fancy Pants Adventures 2, Third World Farmer e Electricman 2
+- [x] Adicionar os 10 jogos, miniaturas e players ao catálogo protegido
+- [x] Validar login, planos, timer, navegação e responsividade dos 10 novos cards
+- [x] Publicar a expansão do catálogo após os testes
+- [x] Auditar as fontes dos 51 jogos e identificar quais retornam erro ou página incompatível
+- [x] Corrigir os links/players dos jogos que não carregarem
+- [x] Adicionar teste específico para as fontes corrigidas e validar acesso protegido
+- [x] Testar os players corrigidos no navegador e publicar o diagnóstico final
+- [x] Adicionar botão de tela cheia dentro do player Flash e HTML5
+- [x] Garantir retorno ao modo normal e suporte responsivo no controle de tela cheia
+- [x] Testar tela cheia junto com os players e publicar a atualização
+- [x] Adicionar teste automatizado específico para a fonte corrigida do Portal e o acesso protegido aos jogos
+- [x] Validar um jogo Flash corrigido e um jogo HTML5 com o botão de tela cheia por cobertura de integração e preview responsivo
+- [x] Salvar checkpoint após a validação dos players e da tela cheia
+- [x] Diagnosticar por que a API nativa de tela cheia não responde no player incorporado
+- [x] Corrigir o botão para expandir o player dentro da página quando fullscreen nativo for bloqueado
+- [x] Adicionar saída do modo expandido e mensagem de fallback clara
+- [x] Testar Flash, HTML5, Google Sites e mobile e publicar a correção
+- [x] Validar manualmente no navegador 1 jogo Flash e 1 jogo HTML5 após a correção, incluindo entrar e sair do modo expandido
+- [ ] Testar o botão de tela cheia dentro do Google Sites incorporado e registrar o fallback
+- [ ] Salvar novo checkpoint e publicar explicitamente a correção final do botão de tela cheia
+
+- [ ] Corrigir a persistência/reconhecimento da sessão autenticada quando a plataforma é incorporada em iframe no Google Sites, preservando o retorno OAuth e sem expor credenciais.
+- [ ] Revalidar o login incorporado após concessão de acesso ao armazenamento e confirmar a abertura dos players no Google Sites.
+- [x] Corrigir a aba OAuth autenticada para retornar automaticamente ao Google Sites quando `returnTo=google-sites` estiver presente
+- [ ] Preparar e anexar um ZIP completo do projeto para download do usuário
