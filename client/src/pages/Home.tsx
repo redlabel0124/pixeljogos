@@ -10,6 +10,7 @@ import { Gamepad2, LockKeyhole, LogIn, LogOut, ShoppingCart, Sparkles, Timer, Ch
 import { toast } from "sonner";
 import { advanceFreeTimer, recoverTimerAfterPersistenceError } from "@shared/planRules";
 import { BASE_FLASH, originalGames } from "@/data/originalGames";
+import { storeEmbeddedSessionToken } from "@/const";
 
 const plans = [
   { id: "free" as const, name: "Gratuito", price: "R$ 0", detail: "1 hora por dia", accent: "from-fuchsia-500 to-violet-500" },
@@ -115,6 +116,7 @@ export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: async user => {
+      if (user.sessionToken) storeEmbeddedSessionToken(user.sessionToken);
       utils.auth.me.setData(undefined, user);
       await utils.auth.me.invalidate();
       setAuthOpen(false);
@@ -125,6 +127,7 @@ export default function Home() {
   });
   const registerMutation = trpc.auth.register.useMutation({
     onSuccess: async user => {
+      if (user.sessionToken) storeEmbeddedSessionToken(user.sessionToken);
       utils.auth.me.setData(undefined, user);
       await utils.auth.me.invalidate();
       setAuthOpen(false);
