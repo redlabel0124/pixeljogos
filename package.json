@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
-    "build:vercel": "esbuild api/index.ts --platform=node --packages=external --bundle --format=esm --outfile=api/index.js && rm api/index.ts && vite build"
+    "build:vercel": "esbuild api/index.ts --platform=node --packages=external --bundle --format=esm --outfile=api/index.js && vite build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
