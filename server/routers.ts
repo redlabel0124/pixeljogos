@@ -38,7 +38,7 @@ export const appRouter = router({
       const token = await sdk.createSessionToken(user.openId, { name: user.name ?? "", expiresInMs: ONE_YEAR_MS });
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-      return user;
+      return { ...user, sessionToken: token };
     }),
     login: publicProcedure.input(z.object({
       email: z.string().trim().email("E-mail inválido").max(320),
@@ -52,7 +52,7 @@ export const appRouter = router({
       const token = await sdk.createSessionToken(user.openId, { name: user.name ?? "", expiresInMs: ONE_YEAR_MS });
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-      return user;
+      return { ...user, sessionToken: token };
     }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
